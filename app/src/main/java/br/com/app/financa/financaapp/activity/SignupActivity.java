@@ -1,4 +1,4 @@
-package br.com.app.financa.financaapp;
+package br.com.app.financa.financaapp.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.app.financa.financaapp.R;
+import br.com.app.financa.financaapp.bean.Usuario;
+import br.com.app.financa.financaapp.dao.UsuarioDao;
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
@@ -44,7 +47,7 @@ public class SignupActivity extends AppCompatActivity {
         _loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
+                // Finaliza tela de cadastro de usuário (SignupActivity) e volta para tela de login LoginActivity
                 finish();
             }
         });
@@ -66,19 +69,22 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Criando usuário...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        Usuario usuario = new Usuario();
+        usuario.setNome(_nameText.getText().toString());
+        usuario.setEmail(_emailText.getText().toString());
+        usuario.setSenha(_passwordText.getText().toString());
 
-        // TODO: Implement your own signup logic here.
+        final UsuarioDao usuarioDao = new UsuarioDao(getBaseContext());
+        usuarioDao.inserir(usuario);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        if (usuarioDao.comErro()) {
+                            onSignupFailed();
+                        } else {
+                            onSignupSuccess();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -93,7 +99,6 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupFailed() {
         Toast.makeText(getBaseContext(), "Login falhou", Toast.LENGTH_LONG).show();
-
         _signupButton.setEnabled(true);
     }
 
@@ -104,8 +109,8 @@ public class SignupActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+        if (name.isEmpty() || name.length() > 10) {
+            _nameText.setError("entre 1 a 10 caracteres");
             valid = false;
         } else {
             _nameText.setError(null);
@@ -118,8 +123,8 @@ public class SignupActivity extends AppCompatActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() > 10) {
+            _passwordText.setError("entre 1 a 10 caracteres");
             valid = false;
         } else {
             _passwordText.setError(null);

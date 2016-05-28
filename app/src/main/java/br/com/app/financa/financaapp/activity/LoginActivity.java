@@ -1,4 +1,4 @@
-package br.com.app.financa.financaapp;
+package br.com.app.financa.financaapp.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -6,16 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.app.financa.financaapp.R;
+import br.com.app.financa.financaapp.bean.Usuario;
+import br.com.app.financa.financaapp.dao.UsuarioDao;
 import butterknife.ButterKnife;
-import butterknife.BindView;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // Inicia a tela de cadastr de usuário (SignupActivity)
+                // Inicia a tela de cadastro de usuário (SignupActivity)
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
@@ -72,30 +72,32 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Autenticando...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        Usuario usuario = new Usuario();
+        usuario.setEmail(_emailText.getText().toString());
+        usuario.setSenha(_passwordText.getText().toString());
 
-        // TODO: Implement your own authentication logic here.
+        UsuarioDao usuarioDao = new UsuarioDao(getBaseContext());
+        final Boolean logado = usuarioDao.logar(usuario);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        if (logado) {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
+                /* Finalizamos a tela de login por conta do usuário ter cadastrado um novo usuário
+                 * Ou seja, ele já logou */
                 this.finish();
             }
         }
@@ -130,8 +132,8 @@ public class LoginActivity extends AppCompatActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("entre 4 e 10 caracter alfanumérico");
+        if (password.isEmpty() || password.length() > 10) {
+            _passwordText.setError("entre 1 a 10 caracteres");
             valid = false;
         } else {
             _passwordText.setError(null);

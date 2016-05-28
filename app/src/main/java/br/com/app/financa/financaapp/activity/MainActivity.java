@@ -1,10 +1,13 @@
-package br.com.app.financa.financaapp;
+package br.com.app.financa.financaapp.activity;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import br.com.app.financa.financaapp.R;
+import br.com.app.financa.financaapp.banco.Banco;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -13,7 +16,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
