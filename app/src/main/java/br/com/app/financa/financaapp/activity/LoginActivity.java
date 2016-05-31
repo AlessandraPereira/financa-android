@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.app.financa.financaapp.R;
+import br.com.app.financa.financaapp.banco.Banco;
 import br.com.app.financa.financaapp.bean.Usuario;
 import br.com.app.financa.financaapp.dao.UsuarioDao;
 import butterknife.ButterKnife;
@@ -111,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+        Banco.USUARIO_LOGADO = true;
         finish();
     }
 
@@ -126,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("entre com um email válido");
+            _emailText.setError("entre com um e-mail válido");
             valid = false;
         } else {
             _emailText.setError(null);

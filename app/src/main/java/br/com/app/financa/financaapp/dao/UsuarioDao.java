@@ -65,12 +65,12 @@ public class UsuarioDao extends Dao implements IDao<Usuario> {
     public Boolean logar(Usuario usuario) {
         Boolean retorno = false;
         Cursor cursor;
-        String[] campos = {"idusuario"};
+        String[] camposRetorno = {"idusuario"};
         String camposWhere = "email=? and senha=?";
         String[] valoresWhere = {usuario.getEmail(), usuario.getSenha()};
 
         db = banco.getReadableDatabase();
-        cursor = db.query(Usuario.NOME_TABELA, campos, camposWhere, valoresWhere, null, null, null);
+        cursor = db.query(Usuario.NOME_TABELA, camposRetorno, camposWhere, valoresWhere, null, null, null);
 
         if (cursor != null) {
             retorno = cursor.moveToFirst();

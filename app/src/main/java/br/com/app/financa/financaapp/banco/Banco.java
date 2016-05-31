@@ -12,6 +12,7 @@ import br.com.app.financa.financaapp.bean.Usuario;
 public class Banco extends SQLiteOpenHelper {
     private static final String BANCO_NOME = "financaapp.db";
     private static final Integer BANCO_VERSAO = 1;
+    public static Boolean USUARIO_LOGADO = false;
 
     public Banco(Context context) {
         super(context, BANCO_NOME, null, BANCO_VERSAO);

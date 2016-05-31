@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.app.financa.financaapp.R;
+import br.com.app.financa.financaapp.banco.Banco;
 import br.com.app.financa.financaapp.bean.Usuario;
 import br.com.app.financa.financaapp.dao.UsuarioDao;
 import butterknife.ButterKnife;
@@ -90,15 +91,15 @@ public class SignupActivity extends AppCompatActivity {
                 }, 3000);
     }
 
-
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+        Banco.USUARIO_LOGADO = true;
         finish();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login falhou", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "A criação do usuário falhou", Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 
@@ -117,7 +118,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("entre com um email válido");
+            _emailText.setError("entre com um e-mail válido");
             valid = false;
         } else {
             _emailText.setError(null);
